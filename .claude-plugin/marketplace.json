@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cc-path",
+  "description": "The principled path for AI-assisted development — harness engineering grounded in Anthropic's philosophy",
+  "owner": {
+    "name": "Jiho Shin"
+  },
+  "plugins": [
+    {
+      "name": "cc-path",
+      "description": "12 specialized agents, 7 governance hooks, 5 conditional rules, 3 skills — all grounded in Anthropic's published philosophy. Guidance (~80%) + Governance (100%) separation. Constitutional AI analogy for workspace design.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Jiho Shin"
+      },
+      "source": "./",
+      "category": "safety",
+      "homepage": "https://github.com/today-i-learned91/cc-path",
+      "tags": [
+        "harness-engineering",
+        "context-engineering",
+        "safety",
+        "governance",
+        "agents",
+        "anthropic-philosophy"
+      ]
+    }
+  ],
+  "version": "0.1.0"
+}
