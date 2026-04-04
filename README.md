@@ -33,6 +33,18 @@ The core insight: Anthropic already published the philosophy. The Claude Code te
 
 What you get is not a template. It is a *reference implementation* with citations.
 
+## Quick Install
+
+```bash
+# One-line setup
+curl -fsSL https://raw.githubusercontent.com/today-i-learned91/cc-path/main/setup.sh | bash
+
+# Or clone and copy manually
+git clone https://github.com/today-i-learned91/cc-path.git
+cp -r cc-path/harness/.claude your-project/
+cp cc-path/harness/CLAUDE.md your-project/
+```
+
 ## Architecture
 
 The harness uses a three-layer context system with a separate governance plane:
@@ -230,6 +242,25 @@ A core practice encoded in the harness. Before acting on any claim, classify it:
 - **ASSUMPTION** -- unverified. Flag explicitly. Validate before building on it.
 
 This README follows its own rule. Source citations throughout are FACTs. The Constitutional AI analogy is an INTERPRETATION. You can verify every claim.
+
+## How cc-path Compares
+
+cc-path occupies a unique niche in the Claude Code ecosystem:
+
+| Project | Focus | cc-path's Relationship |
+|---------|-------|----------------------|
+| [Superpowers](https://github.com/obra/superpowers) | Development methodology (TDD, Socratic brainstorming) | Complementary -- use both |
+| [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | Maximum coverage (156+ skills, 38 agents) | Different philosophy -- breadth vs. depth |
+| [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) | Turnkey orchestration (Team, Autopilot) | Complementary -- cc-path adds governance layer |
+| [oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent) | Multi-model orchestration | Different scope -- cc-path is principles-first |
+
+**Choose by what you need:**
+- Want everything pre-configured? → everything-claude-code
+- Want multi-agent automation? → oh-my-claudecode or oh-my-openagent  
+- Want structured dev methodology? → Superpowers
+- Want to understand *why* your harness works? → **cc-path**
+
+cc-path's governance hooks (circuit breaker, deploy guard, cognitive protection) work alongside any of these tools.
 
 ## Contributing
 
