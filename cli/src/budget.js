@@ -181,6 +181,31 @@ function runBudget(cwd) {
     process.stdout.write(`  ${c.dim}${skillFiles.length} skills total: ~${totalSkillFm} tokens frontmatter${c.reset}\n`);
   }
 
+  // ── Layer 3: On-demand (agents — frontmatter only) ─────────────────────
+
+  const agentsDirs = [
+    path.join(cwd, '.claude', 'agents'),
+    path.join(cwd, 'agents'),
+  ];
+  let agentsDir = null;
+  for (const d of agentsDirs) {
+    if (dirExists(d)) { agentsDir = d; break; }
+  }
+  const agentFiles = agentsDir ? listFiles(agentsDir, '.md') : [];
+  let totalAgentFm = 0;
+
+  if (agentFiles.length > 0) {
+    process.stdout.write(`\n${c.bold}Layer 3 (On-demand — Agents):${c.reset}\n`);
+    for (const f of agentFiles) {
+      const content = readFile(path.join(agentsDir, f));
+      const fm = extractFrontmatter(content);
+      const fmTokens = fm ? estimateTokens(fm) : 0;
+      totalAgentFm += fmTokens;
+      process.stdout.write(`  ${pad(f, COL)} ~${fmTokens} tokens  ${c.dim}(frontmatter only in context)${c.reset}\n`);
+    }
+    process.stdout.write(`  ${c.dim}${agentFiles.length} agents total: ~${totalAgentFm} tokens frontmatter${c.reset}\n`);
+  }
+
   // ── Governance: hooks (zero context cost) ────────────────────────────────
 
   const hooksDir = path.join(cwd, '.claude', 'hooks');

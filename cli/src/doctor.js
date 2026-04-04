@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // ── ANSI helpers ─────────────────────────────────────────────────────────────
 
@@ -189,6 +190,46 @@ function checkHooks(cwd, issues) {
   return { label: '.claude/hooks/', status, score };
 }
 
+function checkHookExecution(cwd, issues) {
+  const dir = path.join(cwd, '.claude', 'hooks');
+  const files = listFiles(dir, '.sh');
+  let score = 0;
+  let passed = 0;
+  let failed = 0;
+
+  if (files.length === 0) {
+    return { label: 'Hook execution', status: `${c.dim}SKIPPED (no .sh hooks)${c.reset}`, score: 0 };
+  }
+
+  const env = {
+    ...process.env,
+    CLAUDE_TOOL_NAME: 'Read',
+    CLAUDE_TOOL_INPUT: 'test',
+    CLAUDE_SESSION_ID: 'doctor-test',
+  };
+
+  for (const f of files) {
+    const fp = path.join(dir, f);
+    try {
+      execSync(`"${fp}"`, { timeout: 5000, env, stdio: 'pipe' });
+      passed++;
+    } catch {
+      failed++;
+      issues.push({ level: 'WARNING', msg: `Hook ${f} failed execution test (non-zero exit or timeout)` });
+    }
+  }
+
+  if (failed === 0) {
+    score += 0.5;
+  }
+
+  let status;
+  if (failed === 0) status = `${files.length}/${files.length} passed ${PASS}`;
+  else status = `${passed}/${files.length} passed ${WARN} (${failed} failed)`;
+
+  return { label: 'Hook execution', status, score };
+}
+
 function checkSkills(cwd, issues) {
   const dir = path.join(cwd, '.claude', 'skills');
   const files = listFiles(dir, '.md');
@@ -233,6 +274,44 @@ function checkSettings(cwd, issues) {
         hooksWired = true;
         score += 1.0;
       }
+
+      // Validate hook command paths exist on disk
+      if (json.hooks) {
+        let allRefsExist = true;
+        const sections = Object.keys(json.hooks);
+        for (const section of sections) {
+          const entries = json.hooks[section] || [];
+          for (const entry of entries) {
+            const hooks = entry.hooks || [];
+            for (const hook of hooks) {
+              if (hook.type === 'command' && hook.command) {
+                // Extract path: first token if it starts with .claude/
+                const cmd = hook.command.split(/\s/)[0];
+                if (cmd.startsWith('.claude/')) {
+                  const hookFp = path.join(cwd, cmd);
+                  if (!fileExists(hookFp)) {
+                    allRefsExist = false;
+                    issues.push({ level: 'WARNING', msg: `settings.json references missing hook: ${cmd}` });
+                  }
+                }
+              }
+            }
+          }
+        }
+        if (allRefsExist && hooksWired) {
+          score += 0.5;
+        }
+
+        // Check for both PreToolUse and PostToolUse
+        const hasPre = Array.isArray(json.hooks.PreToolUse) && json.hooks.PreToolUse.length > 0;
+        const hasPost = Array.isArray(json.hooks.PostToolUse) && json.hooks.PostToolUse.length > 0;
+        if (!hasPre) {
+          issues.push({ level: 'WARNING', msg: 'settings.json missing PreToolUse hooks (recommended for strict mode)' });
+        }
+        if (!hasPost) {
+          issues.push({ level: 'WARNING', msg: 'settings.json missing PostToolUse hooks (recommended for strict mode)' });
+        }
+      }
     } catch {
       issues.push({ level: 'WARNING', msg: 'settings.json exists but failed to parse' });
     }
@@ -261,6 +340,7 @@ function runDoctor(cwd) {
     checkDotClaudeMd(cwd, issues),
     checkRules(cwd, issues),
     checkHooks(cwd, issues),
+    checkHookExecution(cwd, issues),
     checkSkills(cwd, issues),
     checkSettings(cwd, issues),
   ];
@@ -314,6 +394,18 @@ function runDoctor(cwd) {
   }
   if (issues.some((i) => i.msg.includes('allowed-tools or model'))) {
     recs.push('Add allowed-tools and model to skill frontmatter (+0.5 points)');
+  }
+  if (issues.some((i) => i.msg.includes('failed execution test'))) {
+    recs.push('Fix failing hooks so they exit 0 on dry-run (+0.5 points)');
+  }
+  if (issues.some((i) => i.msg.includes('references missing hook'))) {
+    recs.push('Create missing hook files referenced in settings.json (+0.5 points)');
+  }
+  if (issues.some((i) => i.msg.includes('missing PreToolUse'))) {
+    recs.push('Add PreToolUse hooks in settings.json for pre-action governance');
+  }
+  if (issues.some((i) => i.msg.includes('missing PostToolUse'))) {
+    recs.push('Add PostToolUse hooks in settings.json for post-action verification');
   }
   if (!fileExists(path.join(cwd, 'CLAUDE.md'))) {
     recs.push('Create a CLAUDE.md at project root (+1.5 points)');

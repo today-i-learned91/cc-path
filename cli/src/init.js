@@ -35,6 +35,17 @@ const EXAMPLE_SKILLS = [
   ['.claude/skills/research.md',    '.claude/skills/research.md'],
   ['.claude/skills/build.md',       '.claude/skills/build.md'],
   ['.claude/skills/code-review.md', '.claude/skills/code-review.md'],
+  ['.claude/skills/plan.md',        '.claude/skills/plan.md'],
+  ['.claude/skills/deploy.md',      '.claude/skills/deploy.md'],
+  ['.claude/skills/debug.md',       '.claude/skills/debug.md'],
+  ['.claude/skills/critique.md',    '.claude/skills/critique.md'],
+  ['.claude/skills/decision.md',    '.claude/skills/decision.md'],
+];
+
+const LANGUAGE_RULES = [
+  ['.claude/rules/python.md',     '.claude/rules/python.md'],
+  ['.claude/rules/typescript.md', '.claude/rules/typescript.md'],
+  ['.claude/rules/go.md',         '.claude/rules/go.md'],
 ];
 
 const HOOK_SCRIPTS = new Set([
@@ -169,13 +180,37 @@ async function runInit(cwd) {
     { label: 'typescript', value: 'typescript' },
   ]);
 
-  // 3. Safety level
+  // 3. Language rules
+  let selectedLangRules = [];
+  if (projectType === 'python') {
+    selectedLangRules = [LANGUAGE_RULES.find(([dest]) => dest.includes('python'))];
+  } else if (projectType === 'typescript') {
+    selectedLangRules = [LANGUAGE_RULES.find(([dest]) => dest.includes('typescript'))];
+  } else {
+    const wantLang = await confirm(rl, 'Include language-specific rules?', false);
+    if (wantLang) {
+      const langChoice = await selectFromList(rl, 'Which language rules?', [
+        { label: 'python',     value: 'python' },
+        { label: 'typescript', value: 'typescript' },
+        { label: 'go',         value: 'go' },
+        { label: 'all',        value: 'all' },
+      ]);
+      if (langChoice === 'all') {
+        selectedLangRules = [...LANGUAGE_RULES];
+      } else {
+        const match = LANGUAGE_RULES.find(([dest]) => dest.includes(langChoice));
+        if (match) selectedLangRules = [match];
+      }
+    }
+  }
+
+  // 4. Safety level
   const safetyLevel = await selectFromList(rl, 'Safety level:', [
     { label: 'standard (deploy guard + circuit breaker)', value: 'standard' },
     { label: 'strict   (+ cognitive protection + input sanitizer + decision audit)', value: 'strict' },
   ]);
 
-  // 4. Example skills
+  // 5. Example skills
   const includeSkills = await confirm(rl, 'Include example skills?', true);
   process.stdout.write('\n');
 
@@ -185,6 +220,7 @@ async function runInit(cwd) {
   let files = [...STANDARD_FILES];
   if (safetyLevel === 'strict') files = files.concat(STRICT_EXTRA_FILES);
   if (includeSkills) files = files.concat(EXAMPLE_SKILLS);
+  if (selectedLangRules.length > 0) files = files.concat(selectedLangRules);
 
   const harnessRoot = resolveHarnessRoot();
 
