@@ -1,0 +1,9 @@
+{
+  "name": "cc-path",
+  "version": "0.1.0",
+  "description": "The principled path for AI-assisted development",
+  "bin": { "cc-path": "./bin/cc-path.js" },
+  "keywords": ["claude-code", "harness", "ai", "context-engineering"],
+  "license": "MIT",
+  "engines": { "node": ">=18" }
+}
