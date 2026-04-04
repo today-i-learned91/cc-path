@@ -21,35 +21,41 @@
 - [x] CONTRIBUTING.md
 - [x] GitHub repo live
 
+## Completed (v0.2.0 — 2026-04-05)
+
+- [x] Hook hardening: cognitive-protection.sh pipeline parsing (subshell, redirection, echo removal)
+- [x] Hook hardening: input-sanitizer.sh expanded exfiltration (16 pattern categories)
+- [x] Hook hardening: decision-audit.sh per-tool rolling window (replaced tail-5)
+- [x] Security review: Critical/High findings fixed (subshell bypass, redirection bypass, TOOL_NAME sanitization)
+- [x] 5 new skills: plan, deploy, debug, critique, decision (3 → 8 total)
+- [x] Integration tests: 3 suites (pipeline, exfil, rolling window) + run-all.sh updated
+- [x] npm publish prep: package.json hardened, VERSION dynamic, GitHub Actions workflow
+- [x] Decision-audit TOOL_NAME sanitization (path traversal prevention)
+
 ---
 
-## P0 — Next Session
+## P0 — Completed (2026-04-05)
 
-### Hook Logic Hardening
+All P0 items shipped. See "Completed (v0.2.0)" above.
 
-Priority: **Critical** (senior engineer review flagged these)
+### Remaining from Security Review (Medium/Low)
 
-| Hook | Issue | Fix |
-|------|-------|-----|
-| `cognitive-protection.sh` | Read-only check only matches command prefix — `cat file && rm file` bypasses | Parse full command pipeline, check each segment |
-| `input-sanitizer.sh` | Only catches `curl|base64` — `wget`, `python -c`, `nc` variants missed | Expand exfiltration patterns, add `wget`, `python`, `ruby` |
-| `decision-audit.sh` | `tail -5 | grep -c` misses interleaved tool usage | Track per-tool rolling window instead of last-N entries |
-| All hooks | No integration tests against real Claude Code | Add `tests/integration/` with mock session scenarios |
+| # | Severity | Issue | Status |
+|---|----------|-------|--------|
+| 5 | Medium | Race condition on counter files (concurrent hooks) | Deferred — low real-world impact |
+| 7 | Medium | sed pipe splitting breaks regex in grep args | Known limitation — document |
+| 8 | Medium | Prompt injection evasion via Unicode/encoding | Defense-in-depth accepted |
+| 9 | Low | /tmp state files world-readable | P1 |
+| 10 | Low | Inconsistent JSON parsing (jq vs raw grep) | P2 |
+| 11 | Low | Destructive pattern list gaps (terraform, docker) | P1 |
 
-### Skills Expansion (3 → 8)
+### npm Publish (manual step remaining)
 
-| Skill | Priority | Description |
-|-------|----------|-------------|
-| `plan.md` | P0 | Task decomposition with dependency mapping |
-| `deploy.md` | P0 | Safe deployment with dry-run and rollback |
-| `debug.md` | P0 | Root cause analysis, 4-phase investigation |
-| `critique.md` | P1 | Devil's advocate review of plans and designs |
-| `decision.md` | P1 | Structured decision memo with alternatives |
-
-### npm Publish
-
-- [ ] Resolve 2FA / automation token issue
-- [ ] `npm publish --access public` from `cli/`
+- [x] package.json hardened (type, publishConfig, prepublishOnly)
+- [x] VERSION dynamic loading from package.json
+- [x] GitHub Actions workflow (Trusted Publishing / OIDC)
+- [ ] `npm publish --access public` from `cli/` (interactive 2FA)
+- [ ] Configure Trusted Publisher on npmjs.com
 - [ ] Verify `npx cc-path doctor` works
 
 ---

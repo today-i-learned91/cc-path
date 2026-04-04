@@ -32,9 +32,9 @@ Depth: Quick (1-3 sections) · Normal (all) · Deep (+ alternatives + risks + so
 - Each MUST have `CLAUDE.md`: purpose, tech stack, constraints, active task
 - Sub-project CLAUDE.md overrides parent (highest priority)
 
-## Skills (7)
+## Skills (8)
 
-`/research` · `/build` · `/code-review` · `/plan` · `/critique` · `/decision` · `/deploy`
+`/research` · `/build` · `/code-review` · `/plan` · `/deploy` · `/debug` · `/critique` · `/decision`
 
 ## Agents (12)
 

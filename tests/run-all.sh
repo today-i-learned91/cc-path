@@ -25,6 +25,22 @@ for test_file in "$SCRIPT_DIR"/hooks/test-*.sh; do
   echo ""
 done
 
+# Integration tests
+if ls "$SCRIPT_DIR"/integration/test-*.sh 1>/dev/null 2>&1; then
+  echo "--- integration tests ---"
+  echo ""
+  for test_file in "$SCRIPT_DIR"/integration/test-*.sh; do
+    test_name="$(basename "$test_file")"
+    if bash "$test_file"; then
+      ((PASS++))
+    else
+      ((FAIL++))
+      ERRORS+=("$test_name")
+    fi
+    echo ""
+  done
+fi
+
 echo "================================================"
 echo " Results: $PASS passed, $FAIL failed"
 echo "================================================"

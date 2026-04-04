@@ -25,7 +25,27 @@ if echo "$TOOL_INPUT" | grep -qiE "(IMPORTANT:|CRITICAL:|OVERRIDE:|YOU MUST|DO N
 fi
 
 # --- Pattern 3: Data exfiltration attempts ---
-if echo "$TOOL_INPUT" | grep -qiE "(curl.*\|.*base64|wget.*-O-.*\||nc [0-9]|/dev/tcp/)" 2>/dev/null; then
+# Build comprehensive exfiltration detection pattern
+EXFIL_PATTERNS="("
+EXFIL_PATTERNS+="curl.*(\\||--data|--data-binary|-d |-T |-F )"  # curl with data upload or pipe
+EXFIL_PATTERNS+="|wget.*(\\||-O[- ]|-q.*-O)"                     # wget with pipe or stdout output
+EXFIL_PATTERNS+="|python3? -c.*(urllib|requests|socket|http)"     # python network modules
+EXFIL_PATTERNS+="|ruby -e.*(net/http|open-uri|socket)"            # ruby network modules
+EXFIL_PATTERNS+="|perl -e.*(IO::Socket|LWP|HTTP)"                 # perl network modules
+EXFIL_PATTERNS+="|(nc|ncat|socat) .*[0-9]"                        # netcat variants with addresses
+EXFIL_PATTERNS+="|base64.*(\\||<)"                                 # base64 encoding with pipe or redirect
+EXFIL_PATTERNS+="|openssl.*(base64|enc)"                           # openssl encoding
+EXFIL_PATTERNS+="|/dev/(tcp|udp)/"                                 # bash network redirects
+EXFIL_PATTERNS+="|xxd.*\\|.*(nc|curl|wget)"                       # hex encode piped to network
+EXFIL_PATTERNS+="|(dig|nslookup) .*\\$"                           # DNS exfiltration with encoded data
+EXFIL_PATTERNS+="|(base64 -d|base64 --decode).*\\|.*(sh|bash|zsh|exec)"  # decode-and-execute
+EXFIL_PATTERNS+="|rsync.*@"                                        # rsync to remote
+EXFIL_PATTERNS+="|scp .*@"                                         # scp to remote
+EXFIL_PATTERNS+="|ssh .*<"                                         # ssh with stdin redirect
+EXFIL_PATTERNS+="|tftp "                                           # tftp upload
+EXFIL_PATTERNS+=")"
+
+if echo "$TOOL_INPUT" | grep -qiE "$EXFIL_PATTERNS" 2>/dev/null; then
   echo '{"decision":"ask","reason":"[INPUT SANITIZER] Data exfiltration pattern detected. Confirmation required."}'
   exit 0
 fi

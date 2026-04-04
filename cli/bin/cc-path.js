@@ -16,7 +16,7 @@ const color = {
   white: '\x1b[37m',
 };
 
-const VERSION = '0.1.0';
+const VERSION = require('../package.json').version;
 
 const HELP = `
 ${color.bold}cc-path${color.reset} — The principled path for AI-assisted development

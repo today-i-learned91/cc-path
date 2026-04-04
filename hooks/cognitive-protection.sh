@@ -23,8 +23,35 @@ SENSITIVE_PATTERNS="(password|secret|token|api.?key|credential|auth|payment|bill
 if echo "$TOOL_INPUT" | grep -qiE "$SENSITIVE_PATTERNS" 2>/dev/null; then
   # Allow reads (grep/cat) but block writes
   if [ "$TOOL_NAME" = "Bash" ]; then
-    # Check if it's a read-only command
-    if echo "$TOOL_INPUT" | grep -qE "^(grep|rg|cat|head|tail|less|find|ls|echo|git log|git show|git diff)" 2>/dev/null; then
+    # Check if ALL segments of the command pipeline are read-only.
+    # Split on &&, ||, ;, | and verify each segment independently.
+    # A command like "cat file && rm -rf /" must NOT bypass.
+    is_read_only_pipeline() {
+      local cmd="$1"
+      # Reject command substitution and process substitution (Critical: bypass via subshells)
+      if echo "$cmd" | grep -qE '(\$\(|`|<\(|>\()' 2>/dev/null; then
+        return 1
+      fi
+      # Reject output redirection (High: file writes via > or >>)
+      if echo "$cmd" | grep -qE '[^-]>|^>|>>' 2>/dev/null; then
+        return 1
+      fi
+      local parts
+      parts=$(echo "$cmd" | sed 's/&&/\n/g; s/||/\n/g; s/;/\n/g; s/|/\n/g')
+      while IFS= read -r part; do
+        # Trim leading/trailing whitespace
+        part=$(echo "$part" | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+        [ -z "$part" ] && continue
+        # Check if this segment starts with a known read-only command
+        # Note: echo removed from allowlist (High: enables writes with redirection/subshells)
+        if ! echo "$part" | grep -qE "^(grep|rg|cat|head|tail|less|find|ls|wc|file|stat|du|df|which|type|whereis|git (log|show|diff|status|branch|remote|tag))" 2>/dev/null; then
+          return 1  # NOT read-only
+        fi
+      done <<< "$parts"
+      return 0  # all parts are read-only
+    }
+
+    if is_read_only_pipeline "$TOOL_INPUT"; then
       exit 0
     fi
   fi

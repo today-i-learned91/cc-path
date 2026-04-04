@@ -2,6 +2,7 @@
   "name": "cc-path",
   "version": "0.1.0",
   "description": "The principled path for AI-assisted development — harness health check, token budget analyzer, and interactive setup for Claude Code workspaces",
+  "type": "commonjs",
   "bin": {
     "cc-path": "./bin/cc-path.js"
   },
@@ -10,6 +11,12 @@
     "src/",
     "README.md"
   ],
+  "scripts": {
+    "prepublishOnly": "node bin/cc-path.js --version"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "claude-code",
     "claude",
