@@ -36,9 +36,24 @@ Depth: Quick (1-3 sections) · Normal (all) · Deep (+ alternatives + risks + so
 
 `/research` · `/build` · `/code-review` · `/plan` · `/critique` · `/decision` · `/deploy`
 
-## Agents (3)
+## Agents (12)
 
-`researcher` (opus, read-only) · `builder` (sonnet) · `reviewer` (opus, read-only)
+| Tier | Agent | Model | Access | Role |
+|------|-------|-------|--------|------|
+| Orchestration | `coordinator` | opus | read-only | Task decomposition + synthesis |
+| | `critic` | opus | read-only | Devil's advocate, challenge assumptions |
+| Strategic | `analyst` | sonnet | read-only | Requirements + acceptance criteria |
+| | `planner` | opus | read-only | Decompose into parallel subtasks |
+| Analysis | `researcher` | opus | read-only | Evidence gathering, FACT/INTERP/ASSUMPTION |
+| | `architect` | opus | read-only | System design + trade-off analysis |
+| Implementation | `builder` | sonnet | read-write | Production code, minimal complexity |
+| | `reviewer` | opus | read-only | Code review, never modifies files |
+| | `tester` | sonnet | read-write | Tests + edge cases, independent from builder |
+| | `writer` | sonnet | read-write | Docs, READMEs, "brilliant friend" voice |
+| Safety | `security` | opus | read-only | Threat modeling, OWASP, secret exposure |
+| | `red-teamer` | opus | read-write | Adversarial attacks, try to break things |
+
+Select minimum agents per task. Bug fix = 2. Feature = 5. Security audit = 7.
 
 ## Safety Standards
 
