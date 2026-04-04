@@ -1,9 +1,38 @@
 {
   "name": "cc-path",
   "version": "0.1.0",
-  "description": "The principled path for AI-assisted development",
-  "bin": { "cc-path": "./bin/cc-path.js" },
-  "keywords": ["claude-code", "harness", "ai", "context-engineering"],
+  "description": "The principled path for AI-assisted development — harness health check, token budget analyzer, and interactive setup for Claude Code workspaces",
+  "bin": {
+    "cc-path": "./bin/cc-path.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude",
+    "anthropic",
+    "harness",
+    "context-engineering",
+    "ai",
+    "ai-tools",
+    "developer-tools",
+    "safety",
+    "governance"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/today-i-learned91/cc-path"
+  },
+  "homepage": "https://github.com/today-i-learned91/cc-path",
+  "bugs": {
+    "url": "https://github.com/today-i-learned91/cc-path/issues"
+  },
+  "author": "Jiho Shin",
   "license": "MIT",
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }
