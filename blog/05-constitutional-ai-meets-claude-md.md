@@ -228,4 +228,4 @@ This framework produces a workspace that improves over time, generalizes to new 
 4. [Circuit Breakers for AI Agents](04-circuit-breakers-for-ai-agents.md): Lessons from Claude Code's source
 5. **This post**: Your CLAUDE.md Is a Constitution
 
-*The full reference implementation -- harness files, hooks, documentation, and philosophy mapping -- is available at [claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering). MIT licensed. Contributions welcome.*
+*The full reference implementation -- harness files, hooks, documentation, and philosophy mapping -- is available at [cc-path](https://github.com/ziho/cc-path). MIT licensed. Contributions welcome.*

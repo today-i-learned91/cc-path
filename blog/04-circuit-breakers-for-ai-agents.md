@@ -255,4 +255,4 @@ The principle is universal: AI agents need external circuit breakers because the
 
 *Next in the series: [Your CLAUDE.md Is a Constitution](05-constitutional-ai-meets-claude-md.md) -- what Constitutional AI teaches about workspace design.*
 
-*The complete circuit breaker implementation is in the [claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering) repository.*
+*The complete circuit breaker implementation is in the [cc-path](https://github.com/ziho/cc-path) repository.*

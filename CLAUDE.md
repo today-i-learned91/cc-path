@@ -1,4 +1,4 @@
-# Claude Code Harness Engineering — Open Source Project
+# cc-path — Open Source Project
 
 Open source reference implementation for AI harness engineering.
 Audience: Claude Code users who want principled, Anthropic-aligned workspace design.

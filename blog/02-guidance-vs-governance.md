@@ -246,4 +246,4 @@ Then ask Claude to run `git push --force origin main`. It will be blocked. That 
 
 *Next in the series: [From Machines of Loving Grace to settings.json](03-anthropic-philosophy-in-practice.md) -- how Anthropic's published philosophy maps to concrete workspace design decisions.*
 
-*The full harness with all hooks is available at [claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering).*
+*The full harness with all hooks is available at [cc-path](https://github.com/ziho/cc-path).*

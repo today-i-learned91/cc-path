@@ -3,7 +3,7 @@
 **TL;DR**
 - Prompt engineering crafts individual queries. Harness engineering designs the *system* that shapes every query your AI coding assistant receives.
 - Most CLAUDE.md files are cargo-culted prompt dumps. A principled harness uses a three-layer architecture (always / conditional / on-demand) to manage token budgets like a real engineering constraint.
-- We open-sourced a reference implementation with traced citations from Anthropic's published philosophy and Claude Code's source code: [claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering).
+- We open-sourced a reference implementation with traced citations from Anthropic's published philosophy and Claude Code's source code: [cc-path](https://github.com/ziho/cc-path).
 
 ---
 
@@ -103,7 +103,7 @@ The failure modes are predictable once you understand the architecture:
 
 ## What This Project Provides
 
-[claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering) is not a template to copy. It is a reference implementation with citations.
+[cc-path](https://github.com/ziho/cc-path) is not a template to copy. It is a reference implementation with citations.
 
 Every design decision traces from an Anthropic paper or Claude Code source file through a principle to a concrete mechanism:
 
@@ -121,8 +121,8 @@ The project includes:
 ## Getting Started
 
 ```bash
-git clone https://github.com/ziho/claude-code-harness-engineering.git
-cd claude-code-harness-engineering
+git clone https://github.com/ziho/cc-path.git
+cd cc-path
 
 # Copy the harness into your project
 cp harness/CLAUDE.md your-project/CLAUDE.md
@@ -143,4 +143,4 @@ This is the first in a five-part series:
 
 ---
 
-*Context Engineering is not prompt engineering. It is a systems discipline. The [reference implementation](https://github.com/ziho/claude-code-harness-engineering) is open source and waiting for your contributions.*
+*Context Engineering is not prompt engineering. It is a systems discipline. The [reference implementation](https://github.com/ziho/cc-path) is open source and waiting for your contributions.*

@@ -1,4 +1,4 @@
-# Claude Code Harness Engineering
+# cc-path
 
 **Philosophy as Architecture** -- the principled approach to AI coding assistant workspaces.
 
@@ -21,7 +21,7 @@ The failure modes are predictable:
 - **No separation of guidance vs governance.** Everything lives in CLAUDE.md -- suggestions and hard rules alike -- so nothing is reliably enforced.
 - **No principled basis.** Configuration is vibes-driven. Why this rule? Why this structure? Nobody can trace a design decision back to *why it works*.
 - **Token waste from unstructured loading.** Every rule loads on every request. A 600-line CLAUDE.md burns ~4K tokens before Claude reads a single line of your code.
-- **Copy-paste without understanding.** The rule says "read before write" but the author doesn't know it derives from Chris Olah's interpretability research and is enforced in Claude Code's `coordinatorMode.ts:255-268`.
+- **Copy-paste without understanding.** The rule says "read before write" but the author doesn't know it derives from Chris Olah's interpretability research and is a core principle in Anthropic's engineering methodology.
 
 There is a better way.
 
@@ -29,7 +29,7 @@ There is a better way.
 
 **Harness Engineering** is a systems discipline for designing AI coding assistant workspaces. Like DevOps transformed deployment from artisanal SSH sessions into reproducible infrastructure, Harness Engineering transforms CLAUDE.md from a prompt dump into a principled architecture.
 
-The core insight: Anthropic already published the philosophy. The Claude Code team already implemented the architecture. This project connects the two -- tracing every design decision from Anthropic paper through Claude Code source to practical workspace mechanism.
+The core insight: Anthropic already published the philosophy. The Claude Code team already shared the engineering principles. This project connects the two -- tracing every design decision from Anthropic's published papers and engineering blog to practical workspace mechanism.
 
 What you get is not a template. It is a *reference implementation* with citations.
 
@@ -72,8 +72,8 @@ Later layers override earlier ones. Sub-project CLAUDE.md overrides parent. The 
 
 ```bash
 # Clone the repository
-git clone https://github.com/ziho/claude-code-harness-engineering.git
-cd claude-code-harness-engineering
+git clone https://github.com/ziho/cc-path.git
+cd cc-path
 
 # Copy the harness into your project
 cp harness/CLAUDE.md your-project/CLAUDE.md
@@ -184,7 +184,7 @@ Escalation triggers override the matrix: anything touching auth, payments, PII, 
 ## Project Structure
 
 ```
-claude-code-harness-engineering/
+cc-path/
 |
 +-- README.md                  You are here
 +-- LICENSE                    MIT
@@ -241,7 +241,7 @@ Contributions are welcome. The bar is simple:
 
 ```bash
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/claude-code-harness-engineering.git
+git clone https://github.com/YOUR_USERNAME/cc-path.git
 
 # Make your changes in harness/ or docs/
 

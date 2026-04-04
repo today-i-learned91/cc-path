@@ -1,0 +1,7 @@
+{
+  "tool_name": "WebFetch",
+  "tool_input_preview": "{\"url\":\"https://www.anthropic.com/engineering/harness-design-for-long-running-application-development\",\"prompt\":\"Extract all distinctive terminology, key phrases, and concepts about harness design. Wh...",
+  "error": "Request failed with status code 404",
+  "timestamp": "2026-04-04T13:46:32.635Z",
+  "retry_count": 1
+}

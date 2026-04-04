@@ -193,10 +193,10 @@ Here is how to apply these five threads to your own workspace:
 4. **Cherny (Simple thing first)**: Add tool hierarchy guidance. Add the three-line rule.
 5. **Leike (Minimal friction)**: Audit your hooks for latency. Keep safety invisible in the happy path.
 
-These are not theoretical suggestions. They are the architectural decisions behind a [working reference implementation](https://github.com/ziho/claude-code-harness-engineering) that you can copy, adapt, and improve.
+These are not theoretical suggestions. They are the architectural decisions behind a [working reference implementation](https://github.com/ziho/cc-path) that you can copy, adapt, and improve.
 
 ---
 
 *Next in the series: [Circuit Breakers for AI Agents](04-circuit-breakers-for-ai-agents.md) -- how Claude Code's own source code shows you how to prevent runaway failure loops.*
 
-*The full harness with philosophy documentation is available at [claude-code-harness-engineering](https://github.com/ziho/claude-code-harness-engineering).*
+*The full harness with philosophy documentation is available at [cc-path](https://github.com/ziho/cc-path).*
