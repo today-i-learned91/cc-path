@@ -23,7 +23,7 @@ if [ -f "$LOG_FILE" ]; then
     # Check if it's a mutation tool (not reads)
     case "$TOOL_NAME" in
       Edit|Write|Bash|NotebookEdit)
-        echo "{\"additionalContext\":\"[AI DEPENDENCY CHECK] ${TOOL_NAME}을 연속 ${RECENT_COUNT}회 사용 중입니다. 결과를 직접 확인하시겠습니까?\"}"
+        echo "{\"additionalContext\":\"[AI DEPENDENCY CHECK] ${TOOL_NAME}consecutive uses of ${RECENT_COUNT}. Review results manually?\"}"
         ;;
     esac
   fi

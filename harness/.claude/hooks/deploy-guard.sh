@@ -20,7 +20,7 @@ PROD_PATTERNS=(
 
 for pattern in "${PROD_PATTERNS[@]}"; do
   if echo "$COMMAND" | grep -qiE "$pattern"; then
-    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"프로덕션 배포 명령이 감지되었습니다. 명시적 확인 후 수동 실행하세요."}}' >&2
+    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Production deployment command detected. 명시적 확인 후 수동 실행하세요."}}' >&2
     exit 2
   fi
 done

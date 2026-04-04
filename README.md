@@ -1,5 +1,7 @@
 # cc-path
 
+[English](README.md) | [한국어](README_ko.md)
+
 **Philosophy as Architecture** -- the principled approach to AI coding assistant workspaces.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -32,6 +34,26 @@ There is a better way.
 The core insight: Anthropic already published the philosophy. The Claude Code team already shared the engineering principles. This project connects the two -- tracing every design decision from Anthropic's published papers and engineering blog to practical workspace mechanism.
 
 What you get is not a template. It is a *reference implementation* with citations.
+
+## What Changes
+
+**Without cc-path:**
+```
+$ claude "push this to production"
+→ Claude runs `git push --force origin main`
+→ Branch history destroyed. No warning. No recovery.
+```
+
+**With cc-path:**
+```
+$ claude "push this to production"
+→ deploy-guard.sh fires (PreToolUse hook)
+→ "[DEPLOY GUARD] Production deployment command detected. Blocked."
+→ Claude explains the risk and asks for confirmation
+→ Your branch is safe.
+```
+
+CLAUDE.md is guidance (~80% compliance). Hooks are governance (100% enforcement).
 
 ## Quick Install
 
@@ -72,7 +94,7 @@ Layer G: Governance     .claude/hooks/                       0 context tokens
                         via PreToolUse/PostToolUse hooks
 ```
 
-This is not an arbitrary design. It maps directly to Claude Code's internal loading order (`getMemoryFiles` in `claudemd.ts`):
+This is not an arbitrary design. It maps directly to Claude Code's documented loading order:
 
 ```
 Managed -> User -> Project (root->CWD) -> Local -> AutoMem
@@ -171,7 +193,7 @@ Feedback Loop (hooks + memory)
     Memory captures learnings for future sessions.
 ```
 
-This is not a metaphor. Constitutional AI works by training models to critique their own outputs against a set of principles. The harness does the same thing: CLAUDE.md defines principles, the Cognitive Cycle enforces self-critique, hooks provide the hard boundary.
+This is a structural analogy, not a literal equivalence. Constitutional AI is a training-time process with gradient updates; CLAUDE.md is runtime context injection where no learning occurs. But the architectural pattern is the same: layered principles with escalating enforcement. The analogy holds at the design level, not the mechanistic level.
 
 ## Cognitive Protection Matrix
 

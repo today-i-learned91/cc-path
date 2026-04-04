@@ -11,7 +11,7 @@ COUNT=0
 [ -f "$STATE_FILE" ] && COUNT=$(cat "$STATE_FILE" 2>/dev/null || echo 0)
 
 if [ "$COUNT" -ge "$BLOCK_THRESHOLD" ]; then
-  echo "[CIRCUIT BREAKER BLOCK] ${COUNT}회 연속 실패로 도구 실행 차단. 접근법을 완전히 변경하거나 사용자에게 보고하세요." >&2
+  echo "[CIRCUIT BREAKER BLOCK] ${COUNT}consecutive failures. Tool execution blocked. Change approach entirely or report to user." >&2
   exit 2
 fi
 

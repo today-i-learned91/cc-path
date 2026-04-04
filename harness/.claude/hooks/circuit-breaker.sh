@@ -19,9 +19,9 @@ COUNT=$((COUNT + 1))
 echo "$COUNT" > "$STATE_FILE"
 
 if [ "$COUNT" -ge "$BLOCK_THRESHOLD" ]; then
-  echo "{\"additionalContext\":\"[CIRCUIT BREAKER CRITICAL] ${COUNT}회 연속 실패 — 다음 도구 호출이 차단됩니다. 반드시 접근법을 완전히 변경하세요. 근본 원인을 분석하고 사용자에게 상황을 보고하세요.\"}"
+  echo "{\"additionalContext\":\"[CIRCUIT BREAKER CRITICAL] ${COUNT}consecutive failures — next tool call will be blocked. Change your approach entirely. Analyze root cause and report to user.\"}"
 elif [ "$COUNT" -ge "$WARN_THRESHOLD" ]; then
-  echo "{\"additionalContext\":\"[CIRCUIT BREAKER] ${COUNT}회 연속 도구 실패. 접근법을 재검토하세요. 동일한 방법을 반복하지 말고 근본 원인을 분석한 후 다른 전략을 시도하세요.\"}"
+  echo "{\"additionalContext\":\"[CIRCUIT BREAKER] ${COUNT}consecutive tool failures. Re-evaluate your approach. Diagnose the root cause before trying a different strategy.\"}"
 fi
 
 exit 0
