@@ -58,13 +58,15 @@ CLAUDE.md is guidance (~80% compliance). Hooks are governance (100% enforcement)
 ## Quick Install
 
 ```bash
-# One-line setup
-curl -fsSL https://raw.githubusercontent.com/today-i-learned91/cc-path/main/setup.sh | bash
+# As a Claude Code plugin (recommended)
+/plugin marketplace add cc-path@today-i-learned91
 
 # Or clone and copy manually
 git clone https://github.com/today-i-learned91/cc-path.git
-cp -r cc-path/harness/.claude your-project/
 cp cc-path/harness/CLAUDE.md your-project/
+cp -r cc-path/rules/ your-project/.claude/rules/
+cp -r cc-path/hooks/ your-project/.claude/hooks/
+cp -r cc-path/skills/ your-project/.claude/skills/
 ```
 
 ## Architecture
@@ -105,20 +107,19 @@ Later layers override earlier ones. Sub-project CLAUDE.md overrides parent. The 
 ## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/ziho/cc-path.git
-cd cc-path
+# As a Claude Code plugin (recommended)
+/plugin marketplace add cc-path@today-i-learned91
 
-# Copy the harness into your project
-cp harness/CLAUDE.md your-project/CLAUDE.md
-cp -r harness/.claude your-project/.claude
+# Or manual install
+git clone https://github.com/today-i-learned91/cc-path.git
+cp cc-path/harness/CLAUDE.md your-project/
+cp -r cc-path/{rules,hooks,skills} your-project/.claude/
 
-# That's it. Your project now has:
-# - 7 design principles traced from Anthropic's source code
-# - Safety hooks (deploy guard, circuit breaker)
-# - Cognitive protection decision matrix
-# - Three-layer context architecture with measured token budgets
-# - Evidence hierarchy for claim classification
+# Your project now has:
+# - 12 specialized agents (Anthropic org structure)
+# - 7 governance hooks (deploy guard, circuit breaker, cognitive protection)
+# - 5 conditional rules (thinking framework, evidence hierarchy)
+# - 3 on-demand skills (research, build, code-review)
 ```
 
 Customize from there. The harness is a starting point, not a straitjacket.
@@ -223,15 +224,13 @@ cc-path/
 +-- README.md                  You are here
 +-- LICENSE                    MIT
 |
-+-- harness/                   Drop-in harness for any project
-|   +-- CLAUDE.md              Layer 1: Always-loaded principles
-|   +-- .claude/
-|       +-- CLAUDE.md          Development conventions
-|       +-- rules/             Layer 2: Conditional rules
-|       |   +-- thinking-framework.md
-|       |   +-- cognitive-protection.md
-|       +-- skills/            Layer 3: On-demand workflows
-|       +-- hooks/             Layer G: Governance enforcement
++-- .claude-plugin/            Plugin manifest
++-- agents/ (12)               Anthropic org-mapped specialists
++-- rules/ (5)                 Layer 2: Conditional rules
++-- skills/ (3)                Layer 3: On-demand workflows
++-- hooks/ (7)                 Layer G: Governance enforcement
++-- harness/CLAUDE.md          Layer 1: Project template
++-- cli/                       doctor, budget, init tools
 |           +-- deploy-guard.sh
 |           +-- circuit-breaker.sh
 |
@@ -277,7 +276,7 @@ Contributions are welcome. The bar is simple:
 # Fork and clone
 git clone https://github.com/YOUR_USERNAME/cc-path.git
 
-# Make your changes in harness/ or docs/
+# Make your changes in agents/, rules/, hooks/, skills/, or docs/
 
 # Submit a PR with:
 # - What changed
