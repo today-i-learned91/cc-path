@@ -15,6 +15,7 @@ case "$TOOL_NAME" in
 esac
 
 mkdir -p "$TRACK_DIR"
+chmod 700 "$TRACK_DIR"
 
 # Current timestamp in epoch seconds
 NOW=$(date +%s)

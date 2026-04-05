@@ -60,7 +60,7 @@ if echo "$TOOL_INPUT" | grep -qiE "$SENSITIVE_PATTERNS" 2>/dev/null; then
 fi
 
 # --- Escalation Trigger 2: Destructive patterns (deploy-guard overlap) ---
-DESTRUCTIVE_PATTERNS="(rm -rf|DROP TABLE|DROP DATABASE|TRUNCATE|DELETE FROM|--force|--hard|--prod|npm publish|firebase deploy|kubectl delete)"
+DESTRUCTIVE_PATTERNS="(rm -rf|DROP TABLE|DROP DATABASE|TRUNCATE|DELETE FROM|--force|--hard|--prod|npm publish|firebase deploy|kubectl delete|git clean -f|terraform destroy|docker system prune|kubectl apply|chmod -R 777)"
 
 if echo "$TOOL_INPUT" | grep -qE "$DESTRUCTIVE_PATTERNS" 2>/dev/null; then
   echo '{"decision":"ask","reason":"[COGNITIVE PROTECTION] Destructive operation detected. Proceed?"}'

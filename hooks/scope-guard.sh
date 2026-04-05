@@ -16,6 +16,7 @@ TRACK_DIR="/tmp/claude-scope-${CLAUDE_SESSION_ID:-shared}"
 TRACK_FILE="${TRACK_DIR}/files.txt"
 
 mkdir -p "$TRACK_DIR"
+chmod 700 "$TRACK_DIR"
 
 # Extract file_path from JSON input
 # Handles both "file_path":"value" and "file_path": "value"

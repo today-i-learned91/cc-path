@@ -7,6 +7,7 @@ LOG_DIR="/tmp/claude-audit-${CLAUDE_SESSION_ID:-shared}"
 LOG_FILE="${LOG_DIR}/decisions.jsonl"
 
 mkdir -p "$LOG_DIR"
+chmod 700 "$LOG_DIR"
 
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 TOOL_NAME_RAW="${CLAUDE_TOOL_NAME:-unknown}"
