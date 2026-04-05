@@ -133,10 +133,10 @@ function resolveRepoRoot() {
     return devRoot;
   }
 
-  // npm install scenario: node_modules/cc-path/src/ → package root is ../
+  // npm install scenario: node_modules/cc-path/src/ → harness/ assembled by prepack
   const pkgRoot = path.resolve(__dirname, '..');
-  if (fs.existsSync(path.join(pkgRoot, 'hooks'))) {
-    return pkgRoot;
+  if (fs.existsSync(path.join(pkgRoot, 'harness', 'hooks'))) {
+    return path.join(pkgRoot, 'harness');
   }
 
   return null;
@@ -231,7 +231,7 @@ async function runInit(cwd) {
   if (includeSkills) files = files.concat(EXAMPLE_SKILLS);
   if (selectedLangRules.length > 0) files = files.concat(selectedLangRules);
 
-  const repoRoot = resolveHarnessRoot();
+  const repoRoot = resolveRepoRoot();
 
   process.stdout.write(`${c.bold}Setting up harness...${c.reset}\n\n`);
 
