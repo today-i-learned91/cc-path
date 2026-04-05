@@ -2,7 +2,7 @@
 # Tests for cognitive-protection.sh
 # Usage: bash tests/hooks/test-cognitive-protection.sh
 
-HOOK="$(cd "$(dirname "$0")/../.." && pwd)/harness/.claude/hooks/cognitive-protection.sh"
+HOOK="$(cd "$(dirname "$0")/../.." && pwd)/hooks/cognitive-protection.sh"
 PASS=0
 FAIL=0
 

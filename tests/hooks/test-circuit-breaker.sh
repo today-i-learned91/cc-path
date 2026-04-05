@@ -3,9 +3,9 @@
 # Usage: bash tests/hooks/test-circuit-breaker.sh
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-HOOK_FAIL="$ROOT/harness/.claude/hooks/circuit-breaker.sh"
-HOOK_GATE="$ROOT/harness/.claude/hooks/circuit-breaker-gate.sh"
-HOOK_RESET="$ROOT/harness/.claude/hooks/circuit-breaker-reset.sh"
+HOOK_FAIL="$ROOT/hooks/circuit-breaker.sh"
+HOOK_GATE="$ROOT/hooks/circuit-breaker-gate.sh"
+HOOK_RESET="$ROOT/hooks/circuit-breaker-reset.sh"
 PASS=0
 FAIL=0
 

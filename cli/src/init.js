@@ -12,40 +12,42 @@ const c = {
 const ok = (s) => `  ${c.green}✓${c.reset} ${s}`;
 
 // ── Harness file map ──────────────────────────────────────────────────────────
-// dest path → source path relative to harness/ root
+// [dest path in user project, source path relative to repo root]
 const STANDARD_FILES = [
-  ['CLAUDE.md',                              'CLAUDE.md'],
-  ['.claude/CLAUDE.md',                      '.claude/CLAUDE.md'],
-  ['.claude/rules/thinking-framework.md',    '.claude/rules/thinking-framework.md'],
-  ['.claude/rules/graceful-degradation.md',  '.claude/rules/graceful-degradation.md'],
-  ['.claude/hooks/deploy-guard.sh',          '.claude/hooks/deploy-guard.sh'],
-  ['.claude/hooks/circuit-breaker.sh',       '.claude/hooks/circuit-breaker.sh'],
-  ['.claude/hooks/circuit-breaker-gate.sh',  '.claude/hooks/circuit-breaker-gate.sh'],
-  ['.claude/hooks/circuit-breaker-reset.sh', '.claude/hooks/circuit-breaker-reset.sh'],
+  ['CLAUDE.md',                              'harness/CLAUDE.md'],
+  ['.claude/rules/thinking-framework.md',    'rules/thinking-framework.md'],
+  ['.claude/rules/graceful-degradation.md',  'rules/graceful-degradation.md'],
+  ['.claude/hooks/deploy-guard.sh',          'hooks/deploy-guard.sh'],
+  ['.claude/hooks/circuit-breaker.sh',       'hooks/circuit-breaker.sh'],
+  ['.claude/hooks/circuit-breaker-gate.sh',  'hooks/circuit-breaker-gate.sh'],
+  ['.claude/hooks/circuit-breaker-reset.sh', 'hooks/circuit-breaker-reset.sh'],
 ];
 
 const STRICT_EXTRA_FILES = [
-  ['.claude/rules/cognitive-protection.md',  '.claude/rules/cognitive-protection.md'],
-  ['.claude/hooks/cognitive-protection.sh',  '.claude/hooks/cognitive-protection.sh'],
-  ['.claude/hooks/input-sanitizer.sh',       '.claude/hooks/input-sanitizer.sh'],
-  ['.claude/hooks/decision-audit.sh',        '.claude/hooks/decision-audit.sh'],
+  ['.claude/rules/cognitive-protection.md',  'rules/cognitive-protection.md'],
+  ['.claude/hooks/cognitive-protection.sh',  'hooks/cognitive-protection.sh'],
+  ['.claude/hooks/input-sanitizer.sh',       'hooks/input-sanitizer.sh'],
+  ['.claude/hooks/decision-audit.sh',        'hooks/decision-audit.sh'],
+  ['.claude/hooks/rate-limiter.sh',          'hooks/rate-limiter.sh'],
+  ['.claude/hooks/secret-scanner.sh',        'hooks/secret-scanner.sh'],
+  ['.claude/hooks/scope-guard.sh',           'hooks/scope-guard.sh'],
 ];
 
 const EXAMPLE_SKILLS = [
-  ['.claude/skills/research.md',    '.claude/skills/research.md'],
-  ['.claude/skills/build.md',       '.claude/skills/build.md'],
-  ['.claude/skills/code-review.md', '.claude/skills/code-review.md'],
-  ['.claude/skills/plan.md',        '.claude/skills/plan.md'],
-  ['.claude/skills/deploy.md',      '.claude/skills/deploy.md'],
-  ['.claude/skills/debug.md',       '.claude/skills/debug.md'],
-  ['.claude/skills/critique.md',    '.claude/skills/critique.md'],
-  ['.claude/skills/decision.md',    '.claude/skills/decision.md'],
+  ['.claude/skills/research.md',    'skills/research.md'],
+  ['.claude/skills/build.md',       'skills/build.md'],
+  ['.claude/skills/code-review.md', 'skills/code-review.md'],
+  ['.claude/skills/plan.md',        'skills/plan.md'],
+  ['.claude/skills/deploy.md',      'skills/deploy.md'],
+  ['.claude/skills/debug.md',       'skills/debug.md'],
+  ['.claude/skills/critique.md',    'skills/critique.md'],
+  ['.claude/skills/decision.md',    'skills/decision.md'],
 ];
 
 const LANGUAGE_RULES = [
-  ['.claude/rules/python.md',     '.claude/rules/python.md'],
-  ['.claude/rules/typescript.md', '.claude/rules/typescript.md'],
-  ['.claude/rules/go.md',         '.claude/rules/go.md'],
+  ['.claude/rules/python.md',     'rules/python.md'],
+  ['.claude/rules/typescript.md', 'rules/typescript.md'],
+  ['.claude/rules/go.md',         'rules/go.md'],
 ];
 
 const HOOK_SCRIPTS = new Set([
@@ -56,6 +58,9 @@ const HOOK_SCRIPTS = new Set([
   '.claude/hooks/cognitive-protection.sh',
   '.claude/hooks/input-sanitizer.sh',
   '.claude/hooks/decision-audit.sh',
+  '.claude/hooks/rate-limiter.sh',
+  '.claude/hooks/secret-scanner.sh',
+  '.claude/hooks/scope-guard.sh',
 ]);
 
 // ── Settings.json builders ────────────────────────────────────────────────────
@@ -120,21 +125,25 @@ async function confirm(rl, question, defaultYes = true) {
   return trimmed === 'y' || trimmed === 'yes';
 }
 
-// ── Harness root resolution ───────────────────────────────────────────────────
-function resolveHarnessRoot() {
-  // Try sibling harness/ (dev scenario: package lives in cc-path/cli/)
-  const sibling = path.resolve(__dirname, '../../harness');
-  if (fs.existsSync(sibling)) return sibling;
+// ── Repo root resolution ─────────────────────────────────────────────────────
+function resolveRepoRoot() {
+  // Dev scenario: cli/src/ → repo root is ../../
+  const devRoot = path.resolve(__dirname, '../..');
+  if (fs.existsSync(path.join(devRoot, 'hooks')) && fs.existsSync(path.join(devRoot, 'harness'))) {
+    return devRoot;
+  }
 
-  // Try adjacent harness/ next to this file
-  const adjacent = path.resolve(__dirname, '../harness');
-  if (fs.existsSync(adjacent)) return adjacent;
+  // npm install scenario: node_modules/cc-path/src/ → package root is ../
+  const pkgRoot = path.resolve(__dirname, '..');
+  if (fs.existsSync(path.join(pkgRoot, 'hooks'))) {
+    return pkgRoot;
+  }
 
   return null;
 }
 
 // ── File writer ───────────────────────────────────────────────────────────────
-async function writeFile(rl, destDir, destRel, harnessRoot, srcRel) {
+async function writeFile(rl, destDir, destRel, repoRoot, srcRel) {
   const dest = path.join(destDir, destRel);
   const destDirPath = path.dirname(dest);
 
@@ -148,8 +157,8 @@ async function writeFile(rl, destDir, destRel, harnessRoot, srcRel) {
 
   fs.mkdirSync(destDirPath, { recursive: true });
 
-  if (harnessRoot) {
-    const src = path.join(harnessRoot, srcRel);
+  if (repoRoot) {
+    const src = path.join(repoRoot, srcRel);
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, dest);
       return true;
@@ -222,7 +231,7 @@ async function runInit(cwd) {
   if (includeSkills) files = files.concat(EXAMPLE_SKILLS);
   if (selectedLangRules.length > 0) files = files.concat(selectedLangRules);
 
-  const harnessRoot = resolveHarnessRoot();
+  const repoRoot = resolveHarnessRoot();
 
   process.stdout.write(`${c.bold}Setting up harness...${c.reset}\n\n`);
 
@@ -230,7 +239,7 @@ async function runInit(cwd) {
   const rl2 = readline.createInterface({ input: process.stdin, output: process.stdout });
 
   for (const [destRel, srcRel] of files) {
-    const didWrite = await writeFile(rl2, targetDir, destRel, harnessRoot, srcRel);
+    const didWrite = await writeFile(rl2, targetDir, destRel, repoRoot, srcRel);
     if (didWrite) {
       process.stdout.write(ok(`Created ${destRel}`) + '\n');
       written.push(destRel);

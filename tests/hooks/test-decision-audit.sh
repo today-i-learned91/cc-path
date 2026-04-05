@@ -2,7 +2,7 @@
 # Tests for decision-audit.sh
 # Usage: bash tests/hooks/test-decision-audit.sh
 
-HOOK="$(cd "$(dirname "$0")/../.." && pwd)/harness/.claude/hooks/decision-audit.sh"
+HOOK="$(cd "$(dirname "$0")/../.." && pwd)/hooks/decision-audit.sh"
 PASS=0
 FAIL=0
 

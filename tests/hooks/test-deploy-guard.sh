@@ -2,7 +2,7 @@
 # Tests for deploy-guard.sh
 # Usage: bash tests/hooks/test-deploy-guard.sh
 
-HOOK="$(cd "$(dirname "$0")/../.." && pwd)/harness/.claude/hooks/deploy-guard.sh"
+HOOK="$(cd "$(dirname "$0")/../.." && pwd)/hooks/deploy-guard.sh"
 PASS=0
 FAIL=0
 

@@ -2,7 +2,7 @@
 # Tests for input-sanitizer.sh
 # Usage: bash tests/hooks/test-input-sanitizer.sh
 
-HOOK="$(cd "$(dirname "$0")/../.." && pwd)/harness/.claude/hooks/input-sanitizer.sh"
+HOOK="$(cd "$(dirname "$0")/../.." && pwd)/hooks/input-sanitizer.sh"
 PASS=0
 FAIL=0
 
