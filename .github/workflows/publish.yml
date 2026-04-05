@@ -26,6 +26,8 @@ jobs:
         run: node bin/cc-path.js --version
         working-directory: cli
 
-      - name: Publish to npm (trusted publishing)
+      - name: Publish to npm
         run: npm publish --access public --provenance
         working-directory: cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
