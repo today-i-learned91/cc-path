@@ -55,6 +55,37 @@ $ claude "push this to production"
 
 CLAUDE.md is guidance (~80% compliance). Hooks are governance (100% enforcement).
 
+**Without cc-path (token waste):**
+```
+CLAUDE.md: 500 lines, all loaded every request
+→ ~4K tokens consumed before Claude reads your code
+→ Python rules load when editing Go files
+→ Testing guidelines load when writing docs
+```
+
+**With cc-path (progressive compression):**
+```
+Layer 1 (always):     ~2K tokens  — principles + safety
+Layer 2 (conditional): 0 tokens   — python.md loads only on *.py access
+Layer 3 (on-demand):  ~70 tokens  — skill frontmatter only, body on invocation
+Governance:            0 tokens   — hooks run in shell, not in context
+```
+
+**Without cc-path (secret exposure):**
+```
+$ claude "add the API key to config.ts"
+→ Claude writes: const API_KEY = "sk-proj-abc123..."
+→ Committed. Pushed. Secret exposed in git history.
+```
+
+**With cc-path:**
+```
+$ claude "add the API key to config.ts"
+→ secret-scanner.sh fires (PreToolUse hook)
+→ "[SECRET SCANNER] Possible hardcoded secret detected. Use .env instead?"
+→ Claude rewrites to use process.env.API_KEY
+```
+
 ## Quick Install
 
 ```bash
