@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_EVENT=UserPromptSubmit python3 hooks/anthropic_runtime.py",
+            "timeout": 3,
+            "statusMessage": "GOLDE phase detection..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_EVENT=PreToolUse python3 hooks/anthropic_runtime.py",
+            "timeout": 5,
+            "statusMessage": "Agent quality gate..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CLAUDE_HOOK_EVENT=PostToolUse python3 hooks/anthropic_runtime.py",
+            "timeout": 3,
+            "statusMessage": "Verification tracking..."
+          }
+        ]
+      }
+    ]
+  }
+}
