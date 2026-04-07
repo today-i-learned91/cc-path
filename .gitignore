@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.cc-path/
+*.tmp
+.claude/eng-lead-output.txt
